@@ -187,7 +187,7 @@
                         <td>${n.regDate}</td>
                         <td>${n.hit}</td>
                     </tr>
-                    </c:forEach>\
+                    </c:forEach>
 
                     </tbody>
                 </table>
