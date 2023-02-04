@@ -2,6 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 
@@ -78,7 +79,8 @@
                     <h1 class="hidden">고객메뉴</h1>
                     <ul class="linear-layout">
                         <li><a href="/member/home"><img src="/images/txt-mypage.png" alt="마이페이지"/></a></li>
-                        <li><a href="/WEB-INF/view/notice/list.html"><img src="/images/txt-customer.png" alt="고객센터"/></a></li>
+                        <li><a href="/WEB-INF/view/notice/list.html"><img src="/images/txt-customer.png"
+                                                                          alt="고객센터"/></a></li>
                     </ul>
                 </nav>
 
@@ -178,15 +180,15 @@
 
                     <c:forEach var="n" items="${list}">
 
-                    <tr>
-                        <td>${n.id}</td>
-                        <td class="title indent text-align-left">
-                            <a href="detail?id=${n.id}">${n.title}</a>
-                        </td>
-                        <td>${n.writerId}</td>
-                        <td>${n.regDate}</td>
-                        <td>${n.hit}</td>
-                    </tr>
+                        <tr>
+                            <td>${n.id}</td>
+                            <td class="title indent text-align-left">
+                                <a href="detail?id=${n.id}">${n.title}</a>
+                            </td>
+                            <td>${n.writerId}</td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd" value="${n.regDate}"/></td>
+                            <td>${n.hit}</td>
+                        </tr>
                     </c:forEach>
 
                     </tbody>
@@ -200,21 +202,35 @@
 
             <div class="margin-top align-center pager">
 
+                <c:set var="page" value="${param.p == null ? 1 : param.p}"/>
+                <c:set var="startNum" value="${page-(page-1)%5}"/>
+                <c:set var="lastNum" value="23"/>
+
                 <div>
-
-
+                <c:if test="${startNum>1}">
+                    <a href="?p=${startNum-1}&t=&q=" class="btn btn-prev">이전</a>
+                </c:if>
+                <c:if test="${startNum<=1}">
                     <span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
+                </c:if>
 
                 </div>
+
                 <ul class="-list- center">
-                    <li><a class="-text- orange bold" href="?p=1&t=&q=">1</a></li>
+
+                <c:forEach var="i" begin="0" end="4">
+                    <li><a class="-text- orange bold" href="?p=${startNum+i}&t=&q=">${startNum+i}</a></li>
+                </c:forEach>
 
                 </ul>
+
                 <div>
-
-
+                <c:if test="${startNum+5<lastNum}">
+                    <a href="?p=${startNum+5}&t=&q=" class="btn btn-next">다음</a>
+                </c:if>
+                <c:if test="${startNum+5>=lastNum}">
                     <span class="btn btn-next" onclick="alert('다음 페이지가 없습니다.');">다음</span>
-
+                </c:if>
                 </div>
 
             </div>
