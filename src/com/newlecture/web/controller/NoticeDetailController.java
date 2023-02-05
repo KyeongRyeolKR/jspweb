@@ -2,6 +2,7 @@ package com.newlecture.web.controller;
 
 import com.newlecture.web.entity.Notice;
 import com.newlecture.web.info.PrivateInfo;
+import com.newlecture.web.service.NoticeService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,45 +22,11 @@ public class NoticeDetailController extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
 
-        String sql = "SELECT * FROM NOTICE WHERE ID=?";
+        NoticeService service = new NoticeService();
 
-        try {
-            Class.forName(PrivateInfo.driver);
-            Connection con = DriverManager.getConnection(PrivateInfo.url, PrivateInfo.uid, PrivateInfo.pwd);
-            PreparedStatement st = con.prepareStatement(sql);
-            st.setInt(1, id);
-            ResultSet rs = st.executeQuery();
+        Notice notice = service.getNotice(id);
 
-            rs.next();
-            String title = rs.getString("TITLE");
-            String writerId = rs.getString("WRITER_ID");
-            Date regDate = rs.getDate("REGDATE");
-            String hit = rs.getString("HIT");
-            String files = rs.getString("FILES");
-            String content = rs.getString("CONTENT");
-
-            // Notice 엔티티 클래스로 객체를 request 저장소에 심는다.
-            Notice notice = new Notice(id, title, writerId, regDate, hit, files, content);
-            request.setAttribute("n", notice);
-
-            /*
-            // request 저장소에 DB에서 얻어온 값을 심는다.
-            request.setAttribute("title", title);
-            request.setAttribute("writerId", writerId);
-            request.setAttribute("regDate", regDate);
-            request.setAttribute("hit", hit);
-            request.setAttribute("files", files);
-            request.setAttribute("content", content);
-            */
-
-            rs.close();
-            st.close();
-            con.close();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        request.setAttribute("n", notice);
 
         // redirect -> 단순히 페이지를 옮기고 싶을 때 사용
         // forward -> 하고 있던 작업을 그대로 서블릿으로 옮기고 싶을 때 사용
