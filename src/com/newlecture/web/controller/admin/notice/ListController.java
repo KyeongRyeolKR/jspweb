@@ -31,22 +31,17 @@ public class ListController extends HttpServlet {
         NoticeService service = new NoticeService();
         switch (cmd){
             case "일괄공개":
-                for(String openId : openIds){
-                    System.out.printf("open id = %s\n", openId);
+                if(openIds == null){
+                    openIds = new String[1];
+                    openIds[0] = "";
                 }
-
                 List<String> oids = Arrays.asList(openIds);
                 List<String> cids = new ArrayList<>(Arrays.asList(ids));
                 cids.removeAll(oids);
 
-                for(int i=0; i<ids.length; i++){
-                    // 1. 현재 id가 open된 상태냐
-                    if(oids.contains(ids[i])){
-                        // pub 필드 -> 1 변경
-                    } else {
-                        // pub 필드 -> 0 변경
-                    }
-                }
+                System.out.println("oids : " + oids);
+                System.out.println("cids : " + cids);
+
 
                 // Transaction 처리 ( pub을 1과 0으로 변경하는것을 한번에 동작하는 것처럼 )
                 service.pubNoticeAll(oids, cids);

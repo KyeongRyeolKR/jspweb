@@ -38,6 +38,9 @@ public class NoticeService {
         String oidsCSV = String.join(",", oids);
         String cidsCSV = String.join(",", cids);
 
+        System.out.println("oidsCSV : " + oidsCSV);
+        System.out.println("cidsCSV : " + cidsCSV);
+
         return pubNoticeAll(oidsCSV, cidsCSV);
     }
 
@@ -53,10 +56,13 @@ public class NoticeService {
             Connection con = DriverManager.getConnection(PrivateInfo.url, PrivateInfo.uid, PrivateInfo.pwd);
 
             Statement stOpen = con.createStatement();
-            result += stOpen.executeUpdate(sqlOpen);
-
+            if(!oidsCSV.equals("")) {
+                result += stOpen.executeUpdate(sqlOpen);
+            }
             Statement stClose = con.createStatement();
-            result += stClose.executeUpdate(sqlClose);
+            if(!cidsCSV.equals("")) {
+                result += stClose.executeUpdate(sqlClose);
+            }
 
             stOpen.close();
             stClose.close();
